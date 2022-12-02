@@ -25,8 +25,6 @@ export PFAELZER_AUDIO_CUSTOM=pfaelzer_custom.wav
 
 function loginIBMCloud () {
     ibmcloud login  --apikey $IBMCLOUD_APIKEY
-    echo "T_RESOURCEGROUP: $T_RESOURCEGROUP"
-    echo "T_REGION: $T_REGION"
     ibmcloud target -r $T_REGION -g $T_RESOURCEGROUP
     ibmcloud target
 }
@@ -95,7 +93,7 @@ function deleteCustomModel () {
 }
 
 #*********************************
-#        Custom Word
+#        Custom word
 #*********************************
 
 function createWords () {
@@ -114,8 +112,9 @@ function listWords () {
 function deleteWords () {
     export customization_id=$(cat $ROOTFOLDER/code/$CUSTOM_MODEL_ID_JSON | jq '.customization_id' | sed 's/"//g')
     echo ""
-    echo "Delete 'customization_id' 'word': $customization_id ich"
+    echo "Example - Delete 'customization_id' 'word': $customization_id ich, Ich"
     curl -X DELETE -u "apikey:$TTS_APIKEY" "$TTS_URL/v1/customizations/$customization_id/words/ich"
+    curl -X DELETE -u "apikey:$TTS_APIKEY" "$TTS_URL/v1/customizations/$customization_id/words/Ich"
 }
 
 #********************************
@@ -128,80 +127,39 @@ function getCustomAudio () {
 }
 
 #*********************************
-#        Train the model
-#  Information: https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#trainModel-language
-#*********************************
-
-function trainCustomLanguageModel () {
-    export customization_id=$(cat $ROOTFOLDER/code/$CUSTOM_MODEL_ID_JSON | jq '.customization_id' | sed 's/"//g')
-    echo ""
-    echo "Train ..."
-
-    curl -X POST -u "apikey:$TTS_APIKEY" "$TTS_URL/v1/customizations/$customization_id/train"
-    
-    STATUS='pending'
-    TIME=10
-
-    while [ "$STATUS" != 'available' ]; do
-        sleep 10
-        RESPONSE=$(curl -X GET -u "apikey:$TTS_APIKEY" "$TTS_URL/v1/customizations/$customization_id")
-        echo "Response: $RESPONSE"
-        STATUS=$(echo $RESPONSE | sed -e 's/.*\"status\": \"\([^\"]*\)\".*/\1/')
-        echo "Status ($STATUS)"
-        echo "Status: %-15s ( %d )\n" "$STATUS" $TIME
-        let "TIME += 10"
-    done
-
-    curl -X GET -u "apikey:$TTS_APIKEY" "$TTS_URL/v1/customizations/$customization_id/words"
-    curl -X GET -u "apikey:$TTS_APIKEY" "$TTS_URL/v1/customizations/$customization_id"
-}
-
-#*********************************
-#       Verify the model
-#*********************************
-
-function verifyCustomLanguageModel () {
-   export customization_id=$(cat $ROOTFOLDER/code/$CUSTOM_MODEL_ID_JSON | jq '.customization_id' | sed 's/"//g')
-   export basic_model=$(cat $ROOTFOLDER/code/$CUSTOM_MODEL_JSON | jq '.base_model_name' | sed 's/"//g')
-   
-   echo "customization_id: $customization_id"
-   echo "basic_model: $basic_model"
-   echo ""
-   echo "Test audio ..."
-   curl -X POST -u "apikey:$TTS_APIKEY" --header "Content-Type: audio/flac" --data-binary @"$ROOTFOLDER/code/$DRUMS_AUDIO" "$TTS_URL/v1/recognize?model=${basic_model}&language_customization_id=$customization_id"
-}
-
-#*********************************
 #       Flows
 #*********************************
 
 function customizationFlow() {
 
     echo "#------------------"
-    echo "# Create and train a Custom Language Model"
+    echo "# Create a custom model with custom words"
     echo "#------------------"
-    createCustomLanguageModel
+    createCustomModel
     getAllCustomizedModels
-    createCorpora
-    listCorpora
-    trainCustomLanguageModel
+    createWords
+    listWords
+    getCustomAudio
+
     echo "#------------------"
-    echo "# Verify a trained model by using an audio"
+    echo "# Verify the audio on your computer"
+    echo "# $ROOTFOLDER/code/$PFAELZER_AUDIO_CUSTOM"
     echo "#------------------"
-    verifyCustomLanguageModel
 
 }
 
 function basicFlow() {
 
-  sendDefaultAudio
-  getEnUSBroadbandModel
+  #getAllSpeakerModels
+  #getAllVoices
+  getDEDieterV3Voice
+  getDefaultAudio
 
 }
 
 function deleteAll () {
-   deleteCorpora
-   deleteCustomLanguageModel
+   deleteWords
+   deleteCustomModel
    rm $ROOTFOLDER/code/$CUSTOM_MODEL_ID_JSON
 }
 
@@ -217,39 +175,24 @@ echo "#*******************"
 loginIBMCloud
 getAPIKey
 
-deleteCustomModel
-
-#getAllSpeakerModels
-#getAllVoices
-#getDEDieterV3Voice
-getDefaultAudio
-createCustomModel
-getAllCustomizedModels
-createWords
-listWords
-getCustomAudio
-deleteWords
-deleteCustomModel
-getAllCustomizedModels
-
 echo ""
 echo "#*******************"
 echo "# Delete the created customizations"
 echo "#*******************"
 
-# deleteAll
+deleteAll
 
 echo "#*******************"
 echo "# Customization flow"
 echo "#*******************"
 
-# customizationFlow
+customizationFlow
 
 echo "#*******************"
 echo "# Basic flow"
 echo "#*******************"
 
-# basicFlow
+basicFlow
 
 
 

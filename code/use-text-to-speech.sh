@@ -222,7 +222,7 @@ deleteCustomModel
 #getAllSpeakerModels
 #getAllVoices
 #getDEDieterV3Voice
-#getDefaultAudio
+getDefaultAudio
 createCustomModel
 getAllCustomizedModels
 createWords

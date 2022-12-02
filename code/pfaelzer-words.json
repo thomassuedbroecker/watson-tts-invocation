@@ -1,6 +1,27 @@
 {"words":[ 
     {"word":"ich", 
-     "translation":"<phoneme alphabet=\"ibm\" ph=\"I.S.C\"></phoneme>"
+     "translation":"isch"
+    },
+    {"word":"Ich", 
+     "translation":"isch"
+    },
+    {"word":"rede", 
+     "translation":"babbel"
+    },
+    {"word":"ein", 
+     "translation":"än"
+    },
+    {"word":"komme", 
+     "translation":"kumm"
+    },
+    {"word":"der", 
+     "translation":"dä"
+    },
+    {"word":"Pfalz", 
+    "translation":"Pallz"
+    },
+    {"word":"Pfälzer", 
+    "translation":"Pällzer"
     }
   ]
 }

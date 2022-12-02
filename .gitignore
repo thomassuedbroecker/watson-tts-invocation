@@ -1,3 +1,11 @@
+# Custom
+.env
+.DS_Store
+/custom-labs/
+code/temp-s2t.json
+code/temp-tts.json
+
+
 # Logs
 logs
 *.log
@@ -102,3 +110,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+code/pfaelzer_default.wav
+code/pfaelzer_custom.wav

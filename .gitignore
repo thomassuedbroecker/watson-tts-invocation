@@ -4,6 +4,11 @@
 /custom-labs/
 code/temp-s2t.json
 code/temp-tts.json
+code/pfaelzer_default.wav
+code/pfaelzer_custom.wav
+code/pfaelzer-speaker-prompt.wav
+code/pfaelzer-speaker-prompt.m4a
+code/customization_id.json
 
 
 # Logs
@@ -111,7 +116,3 @@ dist
 # TernJS port file
 .tern-port
 
-code/pfaelzer_default.wav
-code/pfaelzer_custom.wav
-code/pfaelzer-speaker-prompt.wav
-code/pfaelzer-speaker-prompt.m4a

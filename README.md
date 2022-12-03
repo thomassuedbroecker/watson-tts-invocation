@@ -134,5 +134,6 @@ List of used API calls:
 * [custom models](https://cloud.ibm.com/apidocs/text-to-speech#createcustommodel)
 * [custom words](https://cloud.ibm.com/apidocs/text-to-speech#addwords)
 * [API Documentations](https://watson-developer-cloud.github.io/swift-sdk/services/TextToSpeechV1/index.html)
+* [Application Node.js example](https://github.com/watson-developer-cloud/speech-to-text-nodejs)
 
 

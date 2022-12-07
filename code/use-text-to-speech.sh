@@ -4,8 +4,6 @@
 
 source ./code/.env
 
-echo "RESOURCE_GROUP: $RESOURCE_GROUP"
-
 export OAUTHTOKEN=""
 export IBMCLOUD_APIKEY=$APIKEY
 export T_RESOURCEGROUP=$RESOURCE_GROUP
